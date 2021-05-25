@@ -1,3 +1,4 @@
+import json
 import os
 import typing as t
 from datetime import datetime, timedelta
@@ -11,6 +12,8 @@ from ksuid.ksuid import (
     ByteArrayLengthException,
     Ksuid,
 )
+
+TESTS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 TEST_ITEMS_COUNT = 10
 
@@ -138,3 +141,14 @@ def test_timestamp_uniqueness():
 
     # Assert
     assert len(ksuids_set) == TEST_ITEMS_COUNT
+
+
+def test_golib_interop():
+    tf_path = os.path.join(TESTS_DIR, "test_kuids.txt")
+
+    with open(tf_path, "r") as test_kuids:
+        lines = test_kuids.readlines()
+        for kuidJSON in lines:
+            test_data = json.loads(kuidJSON)
+            kuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
+            assert test_data["ksuid"] == str(kuid)
