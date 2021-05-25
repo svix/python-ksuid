@@ -11,7 +11,7 @@ https://github.com/segmentio/ksuid
 A ksuid is a K sorted UID. In other words, a KSUID also stores a date component, so that ksuids can be approximately 
 sorted based on the time they were created. 
 
-Read more [here](https://segment.com/blog/a-brief-history-of-the-uuid/).
+Read more [here](https://segment.com/blog/)
 
 ## Usage
 
