@@ -66,6 +66,9 @@ class Ksuid:
 
         return base62.encode(int.from_bytes(bytes(self), "big")).zfill(27)
 
+    def __repr__(self):
+        return str(self)
+
     def __bytes__(self):
         return self.__uid
 
