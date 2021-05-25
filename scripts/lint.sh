@@ -2,7 +2,7 @@
 
 set -ex
 
-mypy .
-isort --check-only .
-black . --check
-flake8 .
+mypy ksuid
+isort --check-only ksuid
+black ksuid --check
+flake8 ksuid
