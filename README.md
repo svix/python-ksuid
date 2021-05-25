@@ -19,6 +19,12 @@ Read more [here](https://segment.com/blog/)
 pip install svix-ksuid
 ```
 
+```
+from ksuid import Ksuid
+
+ksuid = Ksuid()
+```
+
 ## Examples
 
 ### Default ksuid
@@ -26,7 +32,7 @@ pip install svix-ksuid
 Generate a ksuid without passing a specific datetime
 
 ```
-In [1]: from ksuid.ksuid import Ksuid
+In [1]: from ksuid import Ksuid
 
 In [2]: ksuid = Ksuid()
 
@@ -109,3 +115,34 @@ Out[3]: 'ksuid_1: 1sreAHoz6myPhXghsOdVBoec3Vr, ksuid_2: 1sreAHoz6myPhXghsOdVBoec
 In [4]: ksuid_1 == ksuid_2
 Out[4]: True
 ```
+
+
+### Order of ksuid(s)
+
+```
+In [1]: ksuid_1 = Ksuid()
+
+In [2]: ksuid_1.timestamp
+Out[2]: 1621963256
+
+In [3]: ksuid_2 = Ksuid()
+
+In [4]: ksuid_2.timestamp
+Out[4]: 1621963266
+
+In [5]: ksuid_1 < ksuid_2
+Out[5]: True
+
+In [6]: ksuid_1 <= ksuid_2
+Out[6]: True
+
+In [7]: ksuid_1 >= ksuid_2
+Out[7]: False
+
+In [8]: ksuid_1 > ksuid_2
+Out[8]: False
+```
+
+### License
+
+ksuid source code is available under an MIT [License](./LICENSE).
