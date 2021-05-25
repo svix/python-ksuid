@@ -27,7 +27,7 @@ setup(
     description=" A pure-Python KSUID implementation",
     author="Svix",
     author_email="development@svix.com",
-    url="https://www.svix.com",
+    url="https://github.com/svixhq/python-ksuid/",
     license="MIT",
     keywords=[
         "svix",
