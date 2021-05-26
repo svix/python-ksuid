@@ -16,8 +16,15 @@ click==8.0.1
     # via
     #   black
     #   pip-tools
-flake8==3.9.2
+flake8-polyfill==1.0.2
+    # via pep8-naming
+flake8-print==4.0.0
     # via -r requirements.in/development.txt
+flake8==3.9.2
+    # via
+    #   -r requirements.in/development.txt
+    #   flake8-polyfill
+    #   flake8-print
 iniconfig==1.1.1
     # via pytest
 isort==5.8.0
@@ -36,6 +43,8 @@ pathspec==0.8.1
     # via black
 pep517==0.10.0
     # via pip-tools
+pep8-naming==0.11.1
+    # via -r requirements.in/development.txt
 pip-tools==6.1.0
     # via -r requirements.in/development.txt
 pluggy==0.13.1
@@ -43,7 +52,9 @@ pluggy==0.13.1
 py==1.10.0
     # via pytest
 pycodestyle==2.7.0
-    # via flake8
+    # via
+    #   flake8
+    #   flake8-print
 pyflakes==2.3.1
     # via
     #   autoflake
@@ -54,6 +65,8 @@ pytest==6.2.4
     # via -r requirements.in/development.txt
 regex==2021.4.4
     # via black
+six==1.16.0
+    # via flake8-print
 toml==0.10.2
     # via
     #   black
