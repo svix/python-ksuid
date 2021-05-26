@@ -28,6 +28,9 @@ class ByteArrayLengthException(Exception):
     pass
 
 
+SelfT = t.TypeVar("SelfT", bound="Ksuid")
+
+
 @total_ordering
 class Ksuid:
     """Ksuid class inspired by https://github.com/segmentio/ksuid"""
@@ -35,19 +38,19 @@ class Ksuid:
     __uid: bytes
 
     @classmethod
-    def from_base62(cls, data: str):
+    def from_base62(cls: t.Type[SelfT], data: str) -> SelfT:
         """initializes Ksuid from base62 encoding"""
 
-        return Ksuid.from_bytes(int.to_bytes(int(base62.decode(data)), BYTES_LENGTH, "big"))
+        return cls.from_bytes(int.to_bytes(int(base62.decode(data)), BYTES_LENGTH, "big"))
 
     @classmethod
-    def from_bytes(cls, value: bytes):
+    def from_bytes(cls: t.Type[SelfT], value: bytes) -> SelfT:
         """initializes Ksuid from bytes"""
 
         if len(value) != TIMESAMP_LENGTH_IN_BYTES + PAYLOAD_LENGTH_IN_BYTES:
             raise ByteArrayLengthException()
 
-        res = Ksuid()
+        res = cls()
         res.__uid = value
 
         return res
@@ -61,38 +64,39 @@ class Ksuid:
 
         self.__uid = int.to_bytes(timestamp - EPOCH_STAMP, TIMESAMP_LENGTH_IN_BYTES, "big") + _payload
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Creates a base62 string representation"""
 
         return base62.encode(int.from_bytes(bytes(self), "big")).zfill(27)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return str(self)
 
-    def __bytes__(self):
+    def __bytes__(self) -> bytes:
         return self.__uid
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
+        assert isinstance(other, self.__class__)
         return self.__uid == other.__uid
 
-    def __lt__(self, other):
+    def __lt__(self: SelfT, other: SelfT) -> bool:
         return self.__uid < other.__uid
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return int.from_bytes(self.__uid, "big")
 
     @property
-    def datetime(self):
+    def datetime(self) -> datetime:
         unix_time = self.timestamp
 
         return datetime.fromtimestamp(unix_time)
 
     @property
-    def timestamp(self):
+    def timestamp(self) -> int:
         return int.from_bytes(self.__uid[:TIMESAMP_LENGTH_IN_BYTES], "big") + EPOCH_STAMP
 
     @property
-    def payload(self):
+    def payload(self) -> bytes:
         """Returns the payload of the Ksuid with the timestamp encoded portion removed"""
 
         return self.__uid[TIMESAMP_LENGTH_IN_BYTES:]
