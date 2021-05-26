@@ -52,8 +52,11 @@ setup(
     ],
     python_requires=">=3.6",
     install_requires=REQUIRES,
+    zip_safe=False,
     packages=find_packages(exclude=["test", "tests"]),
-    include_package_data=True,
+    package_data={
+        "": ["py.typed"],
+    },
     long_description=README,
     long_description_content_type="text/markdown",
 )
