@@ -76,7 +76,7 @@ class Ksuid:
         return self.__uid == other.__uid
 
     def __lt__(self, other):
-        return self.timestamp < other.timestamp
+        return self.__uid < other.__uid
 
     def __hash__(self):
         return int.from_bytes(self.__uid, "big")
