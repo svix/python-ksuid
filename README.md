@@ -1,5 +1,8 @@
 ![API-Lint](https://github.com/svixhq/python-ksuid/workflows/lint/badge.svg)
 ![Frontend-Lint](https://github.com/svixhq/python-ksuid/workflows/test/badge.svg)
+![GitHub tag](https://img.shields.io/github/tag/svixhq/python-ksuid.svg)
+[![PyPI](https://img.shields.io/pypi/v/svix-ksuid.svg)](https://pypi.python.org/pypi/svix-ksuid/)
+[![Join our slack](https://img.shields.io/badge/Slack-join%20the%20community-blue?logo=slack&style=social)](https://www.svix.com/slack/)
 
 # Python-KSUID
 
