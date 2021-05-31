@@ -4,7 +4,7 @@
 [![PyPI](https://img.shields.io/pypi/v/svix-ksuid.svg)](https://pypi.python.org/pypi/svix-ksuid/)
 [![Join our slack](https://img.shields.io/badge/Slack-join%20the%20community-blue?logo=slack&style=social)](https://www.svix.com/slack/)
 
-# Python-KSUID
+# Svix-KSUID
 
 This library is inspired by [Segment's KSUID](https://segment.com/blog/a-brief-history-of-the-uuid/) implementation:
 https://github.com/segmentio/ksuid
