@@ -1,7 +1,7 @@
 ![API-Lint](https://github.com/svixhq/python-ksuid/workflows/lint/badge.svg)
 ![Frontend-Lint](https://github.com/svixhq/python-ksuid/workflows/test/badge.svg)
 
-# Python-KSUID
+# Svix-KSUID
 
 This library is inspired by [Segment's KSUID](https://segment.com/blog/a-brief-history-of-the-uuid/) implementation:
 https://github.com/segmentio/ksuid
