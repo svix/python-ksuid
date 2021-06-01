@@ -8,7 +8,7 @@ import pytest
 from ksuid.ksuid import (
     BASE62_LENGTH,
     PAYLOAD_LENGTH_IN_BYTES,
-    TIMESAMP_LENGTH_IN_BYTES,
+    TIMESTAMP_LENGTH_IN_BYTES,
     ByteArrayLengthException,
     Ksuid,
 )
@@ -91,7 +91,7 @@ def test_get_payload():
     ksuid = Ksuid()
 
     # Assert
-    assert ksuid.payload == bytes(ksuid)[TIMESAMP_LENGTH_IN_BYTES:]
+    assert ksuid.payload == bytes(ksuid)[TIMESTAMP_LENGTH_IN_BYTES:]
 
 
 def test_compare():
