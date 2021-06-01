@@ -12,13 +12,13 @@ from baseconv import base62
 EPOCH_STAMP = 1400000000
 
 # Timestamp is a uint32
-TIMESAMP_LENGTH_IN_BYTES = 4
+TIMESTAMP_LENGTH_IN_BYTES = 4
 
 # Payload is 16-bytes
 PAYLOAD_LENGTH_IN_BYTES = 16
 
 # The length in bytes
-BYTES_LENGTH = TIMESAMP_LENGTH_IN_BYTES + PAYLOAD_LENGTH_IN_BYTES
+BYTES_LENGTH = TIMESTAMP_LENGTH_IN_BYTES + PAYLOAD_LENGTH_IN_BYTES
 
 # The length of the base64 representation (str)
 BASE62_LENGTH = 27
@@ -47,7 +47,7 @@ class Ksuid:
     def from_bytes(cls: t.Type[SelfT], value: bytes) -> SelfT:
         """initializes Ksuid from bytes"""
 
-        if len(value) != TIMESAMP_LENGTH_IN_BYTES + PAYLOAD_LENGTH_IN_BYTES:
+        if len(value) != TIMESTAMP_LENGTH_IN_BYTES + PAYLOAD_LENGTH_IN_BYTES:
             raise ByteArrayLengthException()
 
         res = cls()
@@ -62,7 +62,7 @@ class Ksuid:
         _payload = secrets.token_bytes(PAYLOAD_LENGTH_IN_BYTES) if payload is None else payload
         timestamp = int(time.time()) if datetime is None else int(datetime.timestamp())
 
-        self.__uid = int.to_bytes(timestamp - EPOCH_STAMP, TIMESAMP_LENGTH_IN_BYTES, "big") + _payload
+        self.__uid = int.to_bytes(timestamp - EPOCH_STAMP, TIMESTAMP_LENGTH_IN_BYTES, "big") + _payload
 
     def __str__(self) -> str:
         """Creates a base62 string representation"""
@@ -93,10 +93,10 @@ class Ksuid:
 
     @property
     def timestamp(self) -> int:
-        return int.from_bytes(self.__uid[:TIMESAMP_LENGTH_IN_BYTES], "big") + EPOCH_STAMP
+        return int.from_bytes(self.__uid[:TIMESTAMP_LENGTH_IN_BYTES], "big") + EPOCH_STAMP
 
     @property
     def payload(self) -> bytes:
         """Returns the payload of the Ksuid with the timestamp encoded portion removed"""
 
-        return self.__uid[TIMESAMP_LENGTH_IN_BYTES:]
+        return self.__uid[TIMESTAMP_LENGTH_IN_BYTES:]
