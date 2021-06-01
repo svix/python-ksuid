@@ -106,17 +106,21 @@ Out[4]: True
 ### Compare ksuid(s)
 
 ```
-In [1]: ksuid_1
-Out[1]: <ksuid.ksuid.Ksuid at 0x7f8868dfcbb0>
+In [1]: ksuid_1 = Ksuid()
 
-In [2]: ksuid_2
-Out[2]: <ksuid.ksuid.Ksuid at 0x7f88480de460>
+In [2]: ksuid_2 = Ksuid.from_bytes(bytes(ksuid_1))
 
 In [3]: f"ksuid_1: {ksuid_1}, ksuid_2: {ksuid_2}"
 Out[3]: 'ksuid_1: 1sreAHoz6myPhXghsOdVBoec3Vr, ksuid_2: 1sreAHoz6myPhXghsOdVBoec3Vr'
 
 In [4]: ksuid_1 == ksuid_2
 Out[4]: True
+
+In [5]: ksuid_1
+Out[5]: 1tM9eRSTrHIrrH5SMEW24rtvIOF
+
+In [6]: ksuid_2
+Out[6]: 1tM9eRSTrHIrrH5SMEW24rtvIOF
 ```
 
 
