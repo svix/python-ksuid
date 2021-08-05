@@ -6,9 +6,6 @@ from datetime import datetime, timedelta
 import pytest
 
 from ksuid.ksuid import (
-    BASE62_LENGTH,
-    PAYLOAD_LENGTH_IN_BYTES,
-    TIMESTAMP_LENGTH_IN_BYTES,
     ByteArrayLengthException,
     Ksuid,
 )
@@ -24,7 +21,7 @@ def test_create():
 
     # Assert
     assert ksuid.timestamp is not None
-    assert len(str(ksuid)) == BASE62_LENGTH
+    assert len(str(ksuid)) == Ksuid.BASE62_LENGTH
 
 
 def test_create_from_timestamp():
@@ -40,7 +37,7 @@ def test_create_from_timestamp():
 
 def test_create_from_payload():
     # Arrange
-    payload = os.urandom(PAYLOAD_LENGTH_IN_BYTES)
+    payload = os.urandom(Ksuid.PAYLOAD_LENGTH_IN_BYTES)
     ksuid = Ksuid(payload=payload)
 
     # Assert
@@ -49,7 +46,7 @@ def test_create_from_payload():
 
 def test_create_from_payload_and_timestamp():
     # Arrange
-    payload = os.urandom(PAYLOAD_LENGTH_IN_BYTES)
+    payload = os.urandom(Ksuid.PAYLOAD_LENGTH_IN_BYTES)
     now = datetime.now()
     now_seconds = now.replace(microsecond=0)
     ksuid = Ksuid(payload=payload, datetime=now)
@@ -91,7 +88,7 @@ def test_get_payload():
     ksuid = Ksuid()
 
     # Assert
-    assert ksuid.payload == bytes(ksuid)[TIMESTAMP_LENGTH_IN_BYTES:]
+    assert ksuid.payload == bytes(ksuid)[Ksuid.TIMESTAMP_LENGTH_IN_BYTES :]
 
 
 def test_compare():
