@@ -10,6 +10,8 @@ from ksuid.ksuid import (
     Ksuid,
 )
 
+EMPTY_KSUID_PAYLOAD = bytes([0] * Ksuid.PAYLOAD_LENGTH_IN_BYTES)
+
 TESTS_DIR = os.path.dirname(os.path.realpath(__file__))
 
 TEST_ITEMS_COUNT = 10
@@ -133,7 +135,7 @@ def test_timestamp_uniqueness():
     time = datetime.now()
     ksuids_set: t.Set[Ksuid] = set()
     for i in range(TEST_ITEMS_COUNT):
-        ksuids_set.add(Ksuid(datetime=time))
+        ksuids_set.add(Ksuid(datetime=time, payload=EMPTY_KSUID_PAYLOAD))
         time += timedelta(seconds=1)
 
     # Assert
