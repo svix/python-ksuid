@@ -35,6 +35,24 @@ from ksuid import Ksuid
 ksuid = Ksuid()
 ```
 
+### Higher timestamp accuracy mode
+
+Ksuids have a 1 second accuracy which is not sufficient for all use-cases. That's why this library exposes a higher accuracy mode which supports accuracy of up to 4ms.
+
+It's fully compatible with normal ksuids, in fact, it outputs valid ksuids. The difference is that it sacrifices one byte of the random payload in favor of this accuracy.
+
+The code too is fully compatible:
+
+```
+pip install svix-ksuid
+```
+
+```
+from ksuid import KsuidMs
+
+ksuid = KsuidMs()
+```
+
 ## Examples
 
 ### Default ksuid

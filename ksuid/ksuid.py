@@ -1,8 +1,7 @@
 import math
 import secrets
-import time
 import typing as t
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import total_ordering
 
 from baseconv import base62
@@ -36,7 +35,7 @@ class Ksuid:
     # The length of the base64 representation (str)
     BASE62_LENGTH = math.ceil(BYTES_LENGTH * 4 / 3)
 
-    __uid: bytes
+    _uid: bytes
 
     @classmethod
     def from_base62(cls: t.Type[SelfT], data: str) -> SelfT:
@@ -52,18 +51,18 @@ class Ksuid:
             raise ByteArrayLengthException()
 
         res = cls()
-        res.__uid = value
+        res._uid = value
 
         return res
 
     def __init__(self, datetime: t.Optional[datetime] = None, payload: t.Optional[bytes] = None):
+        from datetime import datetime as datetime_lib
+
         if payload is not None and len(payload) != self.PAYLOAD_LENGTH_IN_BYTES:
             raise ByteArrayLengthException()
 
         _payload = secrets.token_bytes(self.PAYLOAD_LENGTH_IN_BYTES) if payload is None else payload
-        timestamp = int(time.time()) if datetime is None else int(datetime.timestamp())
-
-        self.__uid = int.to_bytes(timestamp - EPOCH_STAMP, self.TIMESTAMP_LENGTH_IN_BYTES, "big") + _payload
+        self._uid = self._inner_init(datetime or datetime_lib.now(tz=timezone.utc), _payload)
 
     def __str__(self) -> str:
         """Creates a base62 string representation"""
@@ -74,17 +73,22 @@ class Ksuid:
         return str(self)
 
     def __bytes__(self) -> bytes:
-        return self.__uid
+        return self._uid
 
     def __eq__(self, other: object) -> bool:
         assert isinstance(other, self.__class__)
-        return self.__uid == other.__uid
+        return self._uid == other._uid
 
     def __lt__(self: SelfT, other: SelfT) -> bool:
-        return self.__uid < other.__uid
+        return self._uid < other._uid
 
     def __hash__(self) -> int:
-        return int.from_bytes(self.__uid, "big")
+        return int.from_bytes(self._uid, "big")
+
+    def _inner_init(self, dt: datetime, payload: bytes) -> bytes:
+        timestamp = int(dt.timestamp() - EPOCH_STAMP)
+
+        return int.to_bytes(timestamp, self.TIMESTAMP_LENGTH_IN_BYTES, "big") + payload
 
     @property
     def datetime(self) -> datetime:
@@ -93,11 +97,36 @@ class Ksuid:
         return datetime.fromtimestamp(unix_time)
 
     @property
-    def timestamp(self) -> int:
-        return int.from_bytes(self.__uid[: self.TIMESTAMP_LENGTH_IN_BYTES], "big") + EPOCH_STAMP
+    def timestamp(self) -> float:
+        return int.from_bytes(self._uid[: self.TIMESTAMP_LENGTH_IN_BYTES], "big") + EPOCH_STAMP
 
     @property
     def payload(self) -> bytes:
         """Returns the payload of the Ksuid with the timestamp encoded portion removed"""
 
-        return self.__uid[self.TIMESTAMP_LENGTH_IN_BYTES :]
+        return self._uid[self.TIMESTAMP_LENGTH_IN_BYTES :]
+
+
+class KsuidMs(Ksuid):
+    """
+    Ksuid class with increased (millisecond) accuracy
+    """
+
+    # Timestamp is a uint32
+    TIMESTAMP_LENGTH_IN_BYTES = 5
+
+    # Payload is 16-bytes
+    PAYLOAD_LENGTH_IN_BYTES = 15
+
+    TIMESTAMP_MULTIPLIER = 256
+
+    def _inner_init(self, dt: datetime, payload: bytes) -> bytes:
+        timestamp = round((dt.timestamp() - EPOCH_STAMP) * self.TIMESTAMP_MULTIPLIER)
+
+        return int.to_bytes(timestamp, self.TIMESTAMP_LENGTH_IN_BYTES, "big") + payload
+
+    @property
+    def timestamp(self) -> float:
+        return (
+            int.from_bytes(self._uid[: self.TIMESTAMP_LENGTH_IN_BYTES], "big") / self.TIMESTAMP_MULTIPLIER
+        ) + EPOCH_STAMP

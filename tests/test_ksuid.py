@@ -8,6 +8,7 @@ import pytest
 from ksuid.ksuid import (
     ByteArrayLengthException,
     Ksuid,
+    KsuidMs,
 )
 
 EMPTY_KSUID_PAYLOAD = bytes([0] * Ksuid.PAYLOAD_LENGTH_IN_BYTES)
@@ -142,6 +143,17 @@ def test_timestamp_uniqueness():
     assert len(ksuids_set) == TEST_ITEMS_COUNT
 
 
+def test_ms_mode_datetime():
+    # Arrange
+    time = datetime.now()
+    for i in range(TEST_ITEMS_COUNT):
+        ksuid = KsuidMs(datetime=time)
+        # Test the values are correct rounded to 4 ms accuracy
+
+        assert round(time.timestamp() * 256) == round(ksuid.datetime.timestamp() * 256)
+        time += timedelta(milliseconds=5)
+
+
 def test_golib_interop():
     tf_path = os.path.join(TESTS_DIR, "test_kuids.txt")
 
@@ -151,3 +163,15 @@ def test_golib_interop():
             test_data = json.loads(kuidJSON)
             kuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
             assert test_data["ksuid"] == str(kuid)
+
+
+def test_golib_interop_ms_mode():
+    tf_path = os.path.join(TESTS_DIR, "test_kuids.txt")
+
+    with open(tf_path, "r") as test_kuids:
+        lines = test_kuids.readlines()
+        for ksuid_json in lines:
+            test_data = json.loads(ksuid_json)
+            ksuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
+            ksuid_ms = KsuidMs(ksuid.datetime, ksuid.payload[: KsuidMs.PAYLOAD_LENGTH_IN_BYTES])
+            assert timedelta(seconds=-1) < ksuid.datetime - ksuid_ms.datetime < timedelta(seconds=1)
