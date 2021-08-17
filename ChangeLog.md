@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.5.0
+* Add `KsuidMs` for a higher accuracy version
+* Improve type checking
+
 ## Version 0.4.2
 * Fix package to be marked as typed
 * Fix `__repr__` to show something meaningful
