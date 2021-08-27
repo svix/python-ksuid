@@ -1,7 +1,7 @@
 import json
 import os
 import typing as t
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -29,7 +29,7 @@ def test_create():
 
 def test_create_from_timestamp():
     # Arrange
-    now = datetime.now()
+    now = datetime.now(tz=timezone.utc)
     ksuid = Ksuid(datetime=now)
     now_seconds = now.replace(microsecond=0)
 
@@ -50,7 +50,7 @@ def test_create_from_payload():
 def test_create_from_payload_and_timestamp():
     # Arrange
     payload = os.urandom(Ksuid.PAYLOAD_LENGTH_IN_BYTES)
-    now = datetime.now()
+    now = datetime.now(tz=timezone.utc)
     now_seconds = now.replace(microsecond=0)
     ksuid = Ksuid(payload=payload, datetime=now)
 

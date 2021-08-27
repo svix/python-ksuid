@@ -62,7 +62,8 @@ class Ksuid:
             raise ByteArrayLengthException()
 
         _payload = secrets.token_bytes(self.PAYLOAD_LENGTH_IN_BYTES) if payload is None else payload
-        self._uid = self._inner_init(datetime or datetime_lib.now(tz=timezone.utc), _payload)
+        datetime = datetime.astimezone(timezone.utc) if datetime is not None else datetime_lib.now(tz=timezone.utc)
+        self._uid = self._inner_init(datetime, _payload)
 
     def __str__(self) -> str:
         """Creates a base62 string representation"""
@@ -94,7 +95,7 @@ class Ksuid:
     def datetime(self) -> datetime:
         unix_time = self.timestamp
 
-        return datetime.fromtimestamp(unix_time)
+        return datetime.fromtimestamp(unix_time, tz=timezone.utc)
 
     @property
     def timestamp(self) -> float:
