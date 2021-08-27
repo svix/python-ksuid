@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.6.0
+* Store and load timezones as UTC.
+
 ## Version 0.5.0
 * Add `KsuidMs` for a higher accuracy version
 * Improve type checking
