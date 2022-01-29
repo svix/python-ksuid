@@ -5,7 +5,7 @@
   </a>
 </h1>
 
-# Svix-KSUID
+# Svix-KSUID (Python)
 
 ![API-Lint](https://github.com/svixhq/python-ksuid/workflows/lint/badge.svg)
 ![Frontend-Lint](https://github.com/svixhq/python-ksuid/workflows/test/badge.svg)
@@ -15,6 +15,8 @@
 
 This library is inspired by [Segment's KSUID](https://segment.com/blog/a-brief-history-of-the-uuid/) implementation:
 https://github.com/segmentio/ksuid
+
+For the Rust version, please check out https://github.com/svix/rust-ksuid
 
 ## What is a ksuid?
 
