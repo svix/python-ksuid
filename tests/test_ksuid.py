@@ -159,10 +159,12 @@ def test_golib_interop():
 
     with open(tf_path, "r") as test_kuids:
         lines = test_kuids.readlines()
-        for kuidJSON in lines:
-            test_data = json.loads(kuidJSON)
-            kuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
-            assert test_data["ksuid"] == str(kuid)
+        for ksuid_json in lines:
+            test_data = json.loads(ksuid_json)
+            ksuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
+            assert test_data["ksuid"] == str(ksuid)
+            ksuid = Ksuid.from_base62(test_data["ksuid"])
+            assert test_data["ksuid"] == str(ksuid)
 
 
 def test_golib_interop_ms_mode():
@@ -174,4 +176,11 @@ def test_golib_interop_ms_mode():
             test_data = json.loads(ksuid_json)
             ksuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
             ksuid_ms = KsuidMs(ksuid.datetime, ksuid.payload[: KsuidMs.PAYLOAD_LENGTH_IN_BYTES])
+            assert ksuid_ms.datetime == ksuid.datetime
+            ksuid_ms_from = KsuidMs(ksuid_ms.datetime, ksuid_ms.payload)
+            assert ksuid_ms.payload == ksuid_ms_from.payload
+            assert ksuid_ms.timestamp == ksuid_ms_from.timestamp
+
+            ksuid_ms = KsuidMs.from_base62(test_data["ksuid"])
             assert timedelta(seconds=-1) < ksuid.datetime - ksuid_ms.datetime < timedelta(seconds=1)
+            assert test_data["ksuid"] == str(ksuid_ms)
