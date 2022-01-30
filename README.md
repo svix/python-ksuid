@@ -31,7 +31,7 @@ Read more [here](https://segment.com/blog/a-brief-history-of-the-uuid/).
 pip install svix-ksuid
 ```
 
-```
+```python
 from ksuid import Ksuid
 
 ksuid = Ksuid()
@@ -49,7 +49,7 @@ The code too is fully compatible:
 pip install svix-ksuid
 ```
 
-```
+```python
 from ksuid import KsuidMs
 
 ksuid = KsuidMs()
@@ -61,7 +61,7 @@ ksuid = KsuidMs()
 
 Generate a ksuid without passing a specific datetime
 
-```
+```python
 In [1]: from ksuid import Ksuid
 
 In [2]: ksuid = Ksuid()
@@ -84,7 +84,7 @@ Out[7]: "Payload: b'\\xe1\\x93>7\\xf2up\\x87c\\xad\\xc7tZ\\xf5\\xe7\\xf2'"
 
 ### ksuid from datetime
 
-```
+```python
 In [1]: datetime = datetime(year=2021, month=5, day=19, hour=1, minute=1, second=1, microsecond=1)
 
 In [2]: datetime
@@ -101,7 +101,7 @@ Out[5]: 1621407661
 
 ### ksuid from base62
 
-```
+```python
 In [1]: ksuid = Ksuid()
 
 In [2]: ksuid.timestamp
@@ -118,7 +118,7 @@ Out[5]: 1621634852
 
 ### ksuid from bytes
 
-```
+```python
 In [1]: ksuid = Ksuid()
 
 In [2]: ksuid_from_bytes = ksuid.from_bytes(bytes(ksuid))
@@ -132,7 +132,7 @@ Out[4]: True
 
 ### Compare ksuid(s)
 
-```
+```python
 In [1]: ksuid_1 = Ksuid()
 
 In [2]: ksuid_2 = Ksuid.from_bytes(bytes(ksuid_1))
@@ -153,7 +153,7 @@ Out[6]: 1tM9eRSTrHIrrH5SMEW24rtvIOF
 
 ### Order of ksuid(s)
 
-```
+```python
 In [1]: ksuid_1 = Ksuid()
 
 In [2]: ksuid_1.timestamp
