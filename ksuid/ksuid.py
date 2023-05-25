@@ -99,7 +99,7 @@ class Ksuid:
 
     @property
     def timestamp(self) -> float:
-        return int.from_bytes(self._uid[: self.TIMESTAMP_LENGTH_IN_BYTES], "big") + EPOCH_STAMP
+        return float(int.from_bytes(self._uid[: self.TIMESTAMP_LENGTH_IN_BYTES], "big") + EPOCH_STAMP)
 
     @property
     def payload(self) -> bytes:
@@ -129,5 +129,6 @@ class KsuidMs(Ksuid):
     @property
     def timestamp(self) -> float:
         return (
-            int.from_bytes(self._uid[: self.TIMESTAMP_LENGTH_IN_BYTES], "big") / self.TIMESTAMP_MULTIPLIER
-        ) + EPOCH_STAMP
+            float(int.from_bytes(self._uid[: self.TIMESTAMP_LENGTH_IN_BYTES], "big") / self.TIMESTAMP_MULTIPLIER)
+            + EPOCH_STAMP
+        )
