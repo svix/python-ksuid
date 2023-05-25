@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.6.1
+* Make timestamp functions return floats
+
 ## Version 0.6.0
 * Store and load timezones as UTC.
 
