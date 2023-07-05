@@ -68,7 +68,7 @@ class Ksuid:
     def __str__(self) -> str:
         """Creates a base62 string representation"""
 
-        return base62.encode(int.from_bytes(bytes(self), "big")).zfill(27)
+        return base62.encode(int.from_bytes(bytes(self), "big")).zfill(self.BASE62_LENGTH)
 
     def __repr__(self) -> str:
         return str(self)
