@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.6.2
+* Fix `__str__` implementation for non standard sized ksuids (see #27 for details)
+
 ## Version 0.6.1
 * Make timestamp functions return floats
 

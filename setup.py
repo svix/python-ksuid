@@ -3,7 +3,7 @@ import os
 from setuptools import find_packages, setup  # noqa: H301
 
 NAME = "svix-ksuid"
-VERSION = "0.6.1"
+VERSION = "0.6.2"
 # To install the library, run the following
 #
 # python setup.py install
