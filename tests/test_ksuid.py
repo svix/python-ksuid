@@ -1,7 +1,6 @@
 import json
 import os
 import typing as t
-import uuid
 from datetime import datetime, timedelta, timezone
 
 import pytest
