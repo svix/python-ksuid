@@ -1,6 +1,7 @@
 import json
 import os
 import typing as t
+import uuid
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -71,6 +72,52 @@ def test_to_from_base62():
     # Assert
     assert ksuid == ksuid_from_base62
 
+def test_to_from_base62_invalid_base62_string():
+    # Arrange
+    ksuid = Ksuid()
+    invalid_base62 = "invalid_base62_string!"
+
+    # Act & Assert
+    with pytest.raises(ValueError):
+        ksuid.from_base62(invalid_base62)
+
+def test_to_from_base62_empty_string():
+    # Arrange
+    ksuid = Ksuid()
+    empty_base62 = ""
+
+    # Act & Assert
+    with pytest.raises(IndexError): # this looks wrong
+        ksuid.from_base62(empty_base62)
+
+def test_to_from_base62_mismatched_id():
+    # Arrange
+    ksuid = Ksuid()
+    base62 = str("00000000000000000000000-00")
+
+    # Act & Assert
+    with pytest.raises(ValueError): # this looks wrong
+        ksuid.from_base62(base62)
+
+def test_to_from_base62_digit_input():
+    # Arrange
+    ksuid = Ksuid()
+    non_string_input = "1234567890"
+
+    # Act & Assert
+    with pytest.raises(Exception):
+        ksuid.from_base62(non_string_input)
+
+def test_to_from_base62_zero_value_ksuid():
+    # Arrange
+    zero_ksuid = Ksuid.from_base62("000000000000000000000000000")
+    base62 = str(zero_ksuid)
+
+    # Act
+    ksuid_from_base62 = zero_ksuid.from_base62(base62)
+
+    # Assert
+    assert zero_ksuid == ksuid_from_base62
 
 def test_to_from_bytes():
     # Arrange
