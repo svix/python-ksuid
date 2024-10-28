@@ -1,9 +1,9 @@
 import math
 import secrets
+import typing as t
 from datetime import datetime as datetime_lib
 from datetime import timezone
 from functools import total_ordering
-from typing import Optional, Type, TypeVar
 
 from baseconv import base62
 
@@ -17,7 +17,7 @@ class ByteArrayLengthException(Exception):
     pass
 
 
-SelfT = TypeVar("SelfT", bound="Ksuid")
+SelfT = t.TypeVar("SelfT", bound="Ksuid")
 
 
 @total_ordering
@@ -39,13 +39,13 @@ class Ksuid:
     _uid: bytes
 
     @classmethod
-    def from_base62(cls: Type[SelfT], data: str) -> SelfT:
+    def from_base62(cls: t.Type[SelfT], data: str) -> SelfT:
         """initializes Ksuid from base62 encoding"""
 
         return cls.from_bytes(int.to_bytes(int(base62.decode(data)), cls.BYTES_LENGTH, "big"))
 
     @classmethod
-    def from_bytes(cls: Type[SelfT], value: bytes) -> SelfT:
+    def from_bytes(cls: t.Type[SelfT], value: bytes) -> SelfT:
         """initializes Ksuid from bytes"""
 
         if len(value) != cls.TIMESTAMP_LENGTH_IN_BYTES + cls.PAYLOAD_LENGTH_IN_BYTES:
@@ -56,7 +56,7 @@ class Ksuid:
 
         return res
 
-    def __init__(self, datetime: Optional[datetime_lib] = None, payload: Optional[bytes] = None):
+    def __init__(self, datetime: t.Optional[datetime_lib] = None, payload: t.Optional[bytes] = None):
         if payload is not None and len(payload) != self.PAYLOAD_LENGTH_IN_BYTES:
             raise ByteArrayLengthException()
 
