@@ -116,7 +116,7 @@ class KsuidMs(Ksuid):
     # Timestamp is a uint32
     TIMESTAMP_LENGTH_IN_BYTES = 5
 
-    # Payload is 16-bytes
+    # Payload is 15-bytes
     PAYLOAD_LENGTH_IN_BYTES = 15
 
     TIMESTAMP_MULTIPLIER = 256
