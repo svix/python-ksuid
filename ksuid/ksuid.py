@@ -1,7 +1,8 @@
 import math
 import secrets
 import typing as t
-from datetime import datetime, timezone
+from datetime import datetime as datetime_lib
+from datetime import timezone
 from functools import total_ordering
 
 from baseconv import base62
@@ -55,9 +56,7 @@ class Ksuid:
 
         return res
 
-    def __init__(self, datetime: t.Optional[datetime] = None, payload: t.Optional[bytes] = None):
-        from datetime import datetime as datetime_lib
-
+    def __init__(self, datetime: t.Optional[datetime_lib] = None, payload: t.Optional[bytes] = None):
         if payload is not None and len(payload) != self.PAYLOAD_LENGTH_IN_BYTES:
             raise ByteArrayLengthException()
 
@@ -86,16 +85,16 @@ class Ksuid:
     def __hash__(self) -> int:
         return int.from_bytes(self._uid, "big")
 
-    def _inner_init(self, dt: datetime, payload: bytes) -> bytes:
-        timestamp = int(dt.timestamp() - EPOCH_STAMP)
+    def _inner_init(self, datetime: datetime_lib, payload: bytes) -> bytes:
+        timestamp = int(datetime.timestamp() - EPOCH_STAMP)
 
         return int.to_bytes(timestamp, self.TIMESTAMP_LENGTH_IN_BYTES, "big") + payload
 
     @property
-    def datetime(self) -> datetime:
+    def datetime(self) -> datetime_lib:
         unix_time = self.timestamp
 
-        return datetime.fromtimestamp(unix_time, tz=timezone.utc)
+        return datetime_lib.fromtimestamp(unix_time, tz=timezone.utc)
 
     @property
     def timestamp(self) -> float:
@@ -121,8 +120,8 @@ class KsuidMs(Ksuid):
 
     TIMESTAMP_MULTIPLIER = 256
 
-    def _inner_init(self, dt: datetime, payload: bytes) -> bytes:
-        timestamp = round((dt.timestamp() - EPOCH_STAMP) * self.TIMESTAMP_MULTIPLIER)
+    def _inner_init(self, datetime: datetime_lib, payload: bytes) -> bytes:
+        timestamp = round((datetime.timestamp() - EPOCH_STAMP) * self.TIMESTAMP_MULTIPLIER)
 
         return int.to_bytes(timestamp, self.TIMESTAMP_LENGTH_IN_BYTES, "big") + payload
 
