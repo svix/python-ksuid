@@ -1,5 +1,8 @@
 # Changelog
 
+## Next
+* Changed `KsuidMs` implementation to use the fractional part to have 4ms of precision instead of (1/256)s of precision, aligning its interpretation with [rust-ksuid](https://github.com/svix/rust-ksuid), and with its own docstrings
+
 ## Version 0.6.2
 * Fix `__str__` implementation for non standard sized ksuids (see #27 for details)
 
