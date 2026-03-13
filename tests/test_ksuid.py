@@ -1,5 +1,6 @@
 import json
 import os
+import math
 import typing as t
 from datetime import datetime, timedelta, timezone
 
@@ -143,44 +144,67 @@ def test_timestamp_uniqueness():
     assert len(ksuids_set) == TEST_ITEMS_COUNT
 
 
+@pytest.mark.parametrize(
+    "timestamp,expected_timestamp",
+    [(1773383840.187499, 1773383840.184), (1773383840.187501, 1773383840.184), (1773384062.248, 1773384062.248)],
+)
+def test_ms_mode_edge_cases(timestamp, expected_timestamp):
+    time = datetime.fromtimestamp(timestamp)
+    ksuid = KsuidMs(datetime=time)
+    assert ksuid.timestamp == expected_timestamp
+
+
+@pytest.mark.parametrize(
+    "ksuid,expected_timestamp",
+    [
+        ("3AsgpMQps5Gm44a7CdiFOrApblU", 1773386873.512),  # the half-way mark of the second
+        ("3AsgpQ6owuLxEPG1ezVPSJ7Hvns", 1773386873.996),  # highest representable subsecond part
+        ("3AsgpQ8hwQrGCyUThLpDcfc4fkO", 1773386873.000),  # incrementing the fifth byte by 1 wraps around
+    ],
+)
+def test_ms_mode_regression(ksuid, expected_timestamp):
+    ksuid = KsuidMs.from_base62(ksuid)
+    assert ksuid.timestamp == expected_timestamp
+
+
 def test_ms_mode_datetime():
     # Arrange
     time = datetime.now()
-    for i in range(TEST_ITEMS_COUNT):
+    for _i in range(2000):
         ksuid = KsuidMs(datetime=time)
         # Test the values are correct rounded to 4 ms accuracy
-
-        assert round(time.timestamp() * 256) == round(ksuid.datetime.timestamp() * 256)
-        time += timedelta(milliseconds=5)
-
-
-def test_golib_interop():
-    tf_path = os.path.join(TESTS_DIR, "test_kuids.txt")
-
-    with open(tf_path, "r") as test_kuids:
-        lines = test_kuids.readlines()
-        for ksuid_json in lines:
-            test_data = json.loads(ksuid_json)
-            ksuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
-            assert test_data["ksuid"] == str(ksuid)
-            ksuid = Ksuid.from_base62(test_data["ksuid"])
-            assert test_data["ksuid"] == str(ksuid)
+        assert math.floor(time.timestamp() * 250) == math.floor(ksuid.datetime.timestamp() * 250)
+        time += timedelta(microseconds=501)
 
 
-def test_golib_interop_ms_mode():
-    tf_path = os.path.join(TESTS_DIR, "test_kuids.txt")
+TF_PATH = os.path.join(TESTS_DIR, "test_kuids.txt")
 
-    with open(tf_path, "r") as test_kuids:
-        lines = test_kuids.readlines()
-        for ksuid_json in lines:
-            test_data = json.loads(ksuid_json)
-            ksuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
-            ksuid_ms = KsuidMs(ksuid.datetime, ksuid.payload[: KsuidMs.PAYLOAD_LENGTH_IN_BYTES])
-            assert ksuid_ms.datetime == ksuid.datetime
-            ksuid_ms_from = KsuidMs(ksuid_ms.datetime, ksuid_ms.payload)
-            assert ksuid_ms.payload == ksuid_ms_from.payload
-            assert ksuid_ms.timestamp == ksuid_ms_from.timestamp
 
-            ksuid_ms = KsuidMs.from_base62(test_data["ksuid"])
-            assert timedelta(seconds=-1) < ksuid.datetime - ksuid_ms.datetime < timedelta(seconds=1)
-            assert test_data["ksuid"] == str(ksuid_ms)
+def pytest_generate_tests(metafunc):
+    if "test_data" in metafunc.fixturenames:
+        data = []
+        with open(TF_PATH, "r") as test_kuids:
+            for ksuid_json in test_kuids:
+                data.append(json.loads(ksuid_json))
+        metafunc.parametrize("test_data", data)
+
+
+def test_golib_interop(test_data):
+    ksuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
+    assert test_data["ksuid"] == str(ksuid)
+    ksuid = Ksuid.from_base62(test_data["ksuid"])
+    assert test_data["ksuid"] == str(ksuid)
+
+
+def test_golib_interop_ms_mode(test_data):
+    ksuid = Ksuid(datetime.fromtimestamp(test_data["timestamp"]), payload=bytes.fromhex(test_data["payload"]))
+    ksuid_ms = KsuidMs(ksuid.datetime, ksuid.payload[: KsuidMs.PAYLOAD_LENGTH_IN_BYTES])
+    assert ksuid_ms.datetime == ksuid.datetime
+    ksuid_ms_from = KsuidMs(ksuid_ms.datetime, ksuid_ms.payload)
+    assert ksuid_ms.payload == ksuid_ms_from.payload
+    assert ksuid_ms.timestamp == ksuid_ms_from.timestamp
+
+    ksuid_ms = KsuidMs.from_base62(test_data["ksuid"])
+    delta = ksuid.datetime - ksuid_ms.datetime
+    assert timedelta(seconds=-1) < delta < timedelta(seconds=1)
+    assert test_data["ksuid"] == str(ksuid_ms)
