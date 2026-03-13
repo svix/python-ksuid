@@ -46,12 +46,12 @@ class Ksuid:
     _uid: bytes
 
     @classmethod
-    def from_base62(cls: t.Type[SelfT], data: str) -> SelfT:
+    def from_base62(cls: type[SelfT], data: str) -> SelfT:
         """initializes Ksuid from base62 encoding"""
         return cls.from_bytes(int.to_bytes(int(base62.decode(data)), cls.BYTES_LENGTH, "big"))
 
     @classmethod
-    def from_bytes(cls: t.Type[SelfT], value: bytes) -> SelfT:
+    def from_bytes(cls: type[SelfT], value: bytes) -> SelfT:
         """initializes Ksuid from bytes"""
 
         if len(value) != cls.TIMESTAMP_LENGTH_IN_BYTES + cls.PAYLOAD_LENGTH_IN_BYTES:
@@ -59,9 +59,7 @@ class Ksuid:
 
         return cls(_raw=value)
 
-    def __init__(
-        self, datetime: t.Optional[datetime] = None, payload: t.Optional[bytes] = None, _raw: t.Optional[bytes] = None
-    ):
+    def __init__(self, datetime: datetime | None = None, payload: bytes | None = None, _raw: bytes | None = None):
         if _raw is not None:
             self._uid = _raw
             return
