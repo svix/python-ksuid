@@ -1,9 +1,0 @@
-autoflake
-black
-isort
-flake8
-flake8-print
-pep8-naming
-mypy
-pip-tools
-pytest

@@ -14,14 +14,14 @@
 [![Join our slack](https://img.shields.io/badge/Slack-join%20the%20community-blue?logo=slack&style=social)](https://www.svix.com/slack/)
 
 This library is inspired by [Segment's KSUID](https://segment.com/blog/a-brief-history-of-the-uuid/) implementation:
-https://github.com/segmentio/ksuid
+<https://github.com/segmentio/ksuid>
 
-For the Rust version, please check out https://github.com/svix/rust-ksuid
+For the Rust version, please check out <https://github.com/svix/rust-ksuid>
 
 ## What is a ksuid?
 
-A ksuid is a K sorted UID. In other words, a KSUID also stores a date component, so that ksuids can be approximately 
-sorted based on the time they were created. 
+A ksuid is a K sorted UID. In other words, a KSUID also stores a date component, so that ksuids can be approximately
+sorted based on the time they were created.
 
 Read more [here](https://segment.com/blog/a-brief-history-of-the-uuid/).
 
@@ -180,3 +180,12 @@ Out[8]: False
 ### License
 
 ksuid source code is available under an MIT [License](./LICENSE).
+
+### Development
+
+This application uses [`uv`](https://docs.astral.sh/uv/) for virtualenv management by default.
+
+ - To lint, use `uv run scripts/lint.sh`
+ - To run tests, use `uv run pytest`
+
+This repository also has pre-commit hooks set up using [`prek`](https://prek.j178.dev/). They will be checked in CI, but if you'd like to run them locally you can use the `prek` tool.

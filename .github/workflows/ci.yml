@@ -1,0 +1,47 @@
+name: CI
+on: [pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - name: Sync lockfile
+        run: uv sync
+      - name: Run linting
+        run: uv run sh ./scripts/lint.sh
+  prek:
+    name: Validate prek
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+      - uses: j178/prek-action@v1
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python }}
+          enable-cache: true
+      - name: Install deps
+        run: uv sync
+      - name: Run linting
+        run: uv run pytest
+  build:
+    runs-on: ubuntu-latest
+    needs: [prek, lint, test]
+    steps:
+      - run: echo "This is a dummy job so that we can only require one job for branch protection"

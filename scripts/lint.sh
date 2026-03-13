@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-set -ex
+set -exu
 
-mypy ksuid
-isort --check-only ksuid
-black ksuid --check
-flake8 ksuid
+ty check ksuid
+ruff check ksuid
+ruff format --check ksuid
