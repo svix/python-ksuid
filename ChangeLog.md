@@ -1,6 +1,6 @@
 # Changelog
 
-## Next
+## Version 0.7.0
 * Changed `KsuidMs` implementation to use the fractional part to have 4ms of precision instead of (1/256)s of precision, aligning its interpretation with [rust-ksuid](https://github.com/svix/rust-ksuid), and with its own docstrings
 * Bump minimum Python version to 3.10
 * Switch to `uv`, `ruff`, and `ty` for development instead of `pip-tools`, `black`, `flake8`, `isort`, and `mypy`
