@@ -7,3 +7,21 @@ updates:
       day: "tuesday"
       time: "10:00"
       timezone: "America/Los_Angeles"
+    groups:
+      dev:
+        applies-to: version-updates
+        dependency-type: "development"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    open-pull-requests-limit: 2
+    cooldown:
+      default-days: 3
+    groups:
+      workflows:
+        applies-to: version-updates
+        patterns:
+          - '*'
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "10:00"
