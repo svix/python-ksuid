@@ -73,6 +73,33 @@ def test_to_from_base62():
     assert ksuid == ksuid_from_base62
 
 
+def test_eq_with_non_ksuid_does_not_raise():
+    ksuid = Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
+
+    # Comparing against a foreign type must not raise; equality is False
+    assert (ksuid == None) is False
+    assert (ksuid != None) is True
+    assert (ksuid == "not a ksuid") is False
+    assert (ksuid == 42) is False
+    assert None not in [ksuid]
+
+
+def test_eq_by_raw_bytes():
+    raw = bytes(range(Ksuid.BYTES_LENGTH))
+    assert Ksuid.from_bytes(raw) == Ksuid.from_bytes(raw)
+    assert Ksuid.from_bytes(raw) != Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
+    # equal values must hash equally
+    assert hash(Ksuid.from_bytes(raw)) == hash(Ksuid.from_bytes(raw))
+
+
+def test_ordering_with_non_ksuid_raises_type_error():
+    ksuid = Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
+    with pytest.raises(TypeError):
+        _ = ksuid < None
+    with pytest.raises(TypeError):
+        _ = ksuid < "not a ksuid"
+
+
 def test_to_from_bytes():
     # Arrange
     ksuid = Ksuid()
