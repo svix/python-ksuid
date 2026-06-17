@@ -1,7 +1,6 @@
 import json
-import os
 import math
-import typing as t
+import os
 from datetime import datetime, timedelta, timezone
 
 import pytest
@@ -73,6 +72,51 @@ def test_to_from_base62():
     assert ksuid == ksuid_from_base62
 
 
+def test_eq_with_non_ksuid_does_not_raise():
+    ksuid = Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
+
+    # Comparing against a foreign type must not raise; equality is False
+    assert (ksuid == None) is False  # noqa: E711
+    assert (ksuid != None) is True  # noqa: E711
+    assert (ksuid == "not a ksuid") is False
+    assert (ksuid == 42) is False
+    assert None not in [ksuid]
+
+
+def test_eq_by_raw_bytes():
+    raw = bytes(range(Ksuid.BYTES_LENGTH))
+    assert Ksuid.from_bytes(raw) == Ksuid.from_bytes(raw)
+    assert Ksuid.from_bytes(raw) != Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
+    # equal values must hash equally
+    assert hash(Ksuid.from_bytes(raw)) == hash(Ksuid.from_bytes(raw))
+
+
+def test_eq_across_ksuid_subclasses_is_false():
+    # Ksuid and KsuidMs are both 20 bytes, so the same raw bytes can be parsed
+    # as either, but they split those bytes into different timestamp/payload
+    # layouts (4- vs 5-byte timestamp). A Ksuid must never compare equal to a
+    # KsuidMs that merely shares its byte representation.
+    assert Ksuid.BYTES_LENGTH == KsuidMs.BYTES_LENGTH
+    raw = bytes(range(Ksuid.BYTES_LENGTH))
+    ksuid = Ksuid.from_bytes(raw)
+    ksuid_ms = KsuidMs.from_bytes(raw)
+    assert bytes(ksuid) == bytes(ksuid_ms)  # identical raw bytes...
+    assert ksuid != ksuid_ms  # ...but not equal
+    assert ksuid_ms != ksuid
+    assert not (ksuid == ksuid_ms)
+    # same-class equality is unaffected
+    assert ksuid == Ksuid.from_bytes(raw)
+    assert ksuid_ms == KsuidMs.from_bytes(raw)
+
+
+def test_ordering_with_non_ksuid_raises_type_error():
+    ksuid = Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
+    with pytest.raises(TypeError):
+        _ = ksuid < None
+    with pytest.raises(TypeError):
+        _ = ksuid < "not a ksuid"
+
+
 def test_to_from_bytes():
     # Arrange
     ksuid = Ksuid()
@@ -122,7 +166,7 @@ def test_payload_uniqueness():
     # Arrange
     now = datetime.now()
     timestamp = now.replace(microsecond=0).timestamp()
-    ksuids_set: t.Set[Ksuid] = set()
+    ksuids_set: set[Ksuid] = set()
     for i in range(TEST_ITEMS_COUNT):
         ksuids_set.add(Ksuid(datetime=now))
 
@@ -135,7 +179,7 @@ def test_payload_uniqueness():
 def test_timestamp_uniqueness():
     # Arrange
     time = datetime.now()
-    ksuids_set: t.Set[Ksuid] = set()
+    ksuids_set: set[Ksuid] = set()
     for i in range(TEST_ITEMS_COUNT):
         ksuids_set.add(Ksuid(datetime=time, payload=EMPTY_KSUID_PAYLOAD))
         time += timedelta(seconds=1)
@@ -183,7 +227,7 @@ TF_PATH = os.path.join(TESTS_DIR, "test_kuids.txt")
 def pytest_generate_tests(metafunc):
     if "test_data" in metafunc.fixturenames:
         data = []
-        with open(TF_PATH, "r") as test_kuids:
+        with open(TF_PATH) as test_kuids:
             for ksuid_json in test_kuids:
                 data.append(json.loads(ksuid_json))
         metafunc.parametrize("test_data", data)
