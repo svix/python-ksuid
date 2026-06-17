@@ -81,7 +81,10 @@ class Ksuid:
         return self._uid
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Ksuid):
+        if (
+            not isinstance(other, Ksuid)
+            or self.TIMESTAMP_LENGTH_IN_BYTES != other.TIMESTAMP_LENGTH_IN_BYTES
+        ):
             return NotImplemented
         return self._uid == other._uid
 

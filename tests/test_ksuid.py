@@ -92,6 +92,24 @@ def test_eq_by_raw_bytes():
     assert hash(Ksuid.from_bytes(raw)) == hash(Ksuid.from_bytes(raw))
 
 
+def test_eq_across_ksuid_subclasses_is_false():
+    # Ksuid and KsuidMs are both 20 bytes, so the same raw bytes can be parsed
+    # as either, but they split those bytes into different timestamp/payload
+    # layouts (4- vs 5-byte timestamp). A Ksuid must never compare equal to a
+    # KsuidMs that merely shares its byte representation.
+    assert Ksuid.BYTES_LENGTH == KsuidMs.BYTES_LENGTH
+    raw = bytes(range(Ksuid.BYTES_LENGTH))
+    ksuid = Ksuid.from_bytes(raw)
+    ksuid_ms = KsuidMs.from_bytes(raw)
+    assert bytes(ksuid) == bytes(ksuid_ms)  # identical raw bytes...
+    assert ksuid != ksuid_ms  # ...but not equal
+    assert ksuid_ms != ksuid
+    assert not (ksuid == ksuid_ms)
+    # same-class equality is unaffected
+    assert ksuid == Ksuid.from_bytes(raw)
+    assert ksuid_ms == KsuidMs.from_bytes(raw)
+
+
 def test_ordering_with_non_ksuid_raises_type_error():
     ksuid = Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
     with pytest.raises(TypeError):
