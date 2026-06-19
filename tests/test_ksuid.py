@@ -72,6 +72,12 @@ def test_to_from_base62():
     assert ksuid == ksuid_from_base62
 
 
+@pytest.mark.parametrize("ksuid_cls", [Ksuid, KsuidMs])
+def test_from_base62_rejects_oversized_value(ksuid_cls):
+    with pytest.raises(ByteArrayLengthException):
+        ksuid_cls.from_base62("z" * ksuid_cls.BASE62_LENGTH)
+
+
 def test_eq_with_non_ksuid_does_not_raise():
     ksuid = Ksuid.from_bytes(bytes(Ksuid.BYTES_LENGTH))
 
