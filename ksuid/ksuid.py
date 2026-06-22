@@ -48,7 +48,13 @@ class Ksuid:
     @classmethod
     def from_base62(cls: type[SelfT], data: str) -> SelfT:
         """initializes Ksuid from base62 encoding"""
-        return cls.from_bytes(int.to_bytes(int(base62.decode(data)), cls.BYTES_LENGTH, "big"))
+        decoded = int(base62.decode(data))
+        try:
+            value = int.to_bytes(decoded, cls.BYTES_LENGTH, "big")
+        except OverflowError as exc:
+            byte_length = (decoded.bit_length() + 7) // 8
+            raise ByteArrayLengthException(f"Incorrect value length {byte_length}") from exc
+        return cls.from_bytes(value)
 
     @classmethod
     def from_bytes(cls: type[SelfT], value: bytes) -> SelfT:
