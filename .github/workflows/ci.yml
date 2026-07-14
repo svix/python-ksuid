@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@v8.3.2
         with:
           python-version: ${{ matrix.python }}
           enable-cache: true
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.0
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: astral-sh/setup-uv@v8.3.2
       - uses: j178/prek-action@v2.0.5
   test:
     timeout-minutes: 5
@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.0
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v8.2.0
+        uses: astral-sh/setup-uv@v8.3.2
         with:
           python-version: ${{ matrix.python }}
           enable-cache: true
