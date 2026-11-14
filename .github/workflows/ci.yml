@@ -26,6 +26,12 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: astral-sh/setup-uv@v10.3.3
       - uses: j178/prek-action@v3.1.0
+      - name: Verify the workflow lockfile
+        uses: j178/prek-action@v3.1.0
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          extra-args: "--hook-stage manual gh-actions-lock-verify --all-files"
   test:
     timeout-minutes: 5
     runs-on: ubuntu-latest
