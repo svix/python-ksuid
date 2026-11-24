@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v10.3.3
+        uses: astral-sh/setup-uv@v10.4.0
         with:
           python-version: ${{ matrix.python }}
           enable-cache: true
@@ -24,10 +24,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.3.3
-      - uses: j178/prek-action@v3.1.0
+      - uses: astral-sh/setup-uv@v10.4.0
+      - uses: j178/prek-action@v3.1.1
       - name: Verify the workflow lockfile
-        uses: j178/prek-action@v3.1.0
+        uses: j178/prek-action@v3.1.1
         env:
           GH_TOKEN: ${{ github.token }}
         with:
@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v10.3.3
+        uses: astral-sh/setup-uv@v10.4.0
         with:
           python-version: ${{ matrix.python }}
           enable-cache: true
