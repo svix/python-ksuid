@@ -5,24 +5,24 @@ version: 'v0.0.3'
 workflows:
     '.github/workflows/ci.yml':
         - 'actions/checkout@v7.0.1'
-        - 'astral-sh/setup-uv@v10.3.3'
-        - 'j178/prek-action@v3.1.0'
+        - 'astral-sh/setup-uv@v10.4.0'
+        - 'j178/prek-action@v3.1.1'
     '.github/workflows/release.yml':
         - 'actions/checkout@v7.0.1'
-        - 'astral-sh/setup-uv@v10.3.3'
+        - 'astral-sh/setup-uv@v10.4.0'
 dependencies:
     'actions/checkout@v7.0.1':
         ref: 'v7.0.1'
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
         owner_id: 44036562
         repo_id: 197814629
-    'astral-sh/setup-uv@v10.3.3':
-        ref: 'v10.3.3'
-        commit: 'sha1-68559e99cc807c1eb7e9238fd43a15bba460eec2'
+    'astral-sh/setup-uv@v10.4.0':
+        ref: 'v10.4.0'
+        commit: 'sha1-1db35dd8eee11c5894872e0b383ae6c406cf738d'
         owner_id: 115962839
         repo_id: 846733598
-    'j178/prek-action@v3.1.0':
-        ref: 'v3.1.0'
-        commit: 'sha1-44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d'
+    'j178/prek-action@v3.1.1':
+        ref: 'v3.1.1'
+        commit: 'sha1-7b101f8338a08d2bd6fdb3625e4e7692428763a3'
         owner_id: 10510431
         repo_id: 1052387486
