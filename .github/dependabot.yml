@@ -22,6 +22,4 @@ updates:
         patterns:
           - '*'
     schedule:
-      interval: "weekly"
-      day: "tuesday"
-      time: "10:00"
+      interval: "monthly"
